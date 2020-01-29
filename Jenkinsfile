@@ -19,6 +19,7 @@ node{
   stage('Docker Build, Push'){
     withDockerRegistry([credentialsId: "${dockerhubCred}", url: 'https://index.docker.io/v1/']) {
       sh "docker build -t ${ImageName}:${imageTag} ."
+      sh "docker tag ${ImageName}:${imageTag} ${ImageName}:latest"
       sh "docker push ${ImageName}"
         }
 
