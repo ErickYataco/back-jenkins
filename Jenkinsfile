@@ -1,0 +1,31 @@
+node{
+  def gitUrl        = "https://github.com/ErickYataco/back-jenkins.git"
+  def ImageName     = "erickyataco/lemon-back"
+  def gitCred 	    = "github"
+  def dockerhubCred = "dockerhub"
+
+  try{
+  stage('Checkout'){
+    git credentialsId: "$gitCred", url: "$gitUrl"
+    // tag image with th commit id
+    sh "git rev-parse --short HEAD > .git/commit-id"
+    imageTag = readFile('.git/commit-id').trim()
+
+  }
+  stage('RUN Unit Tests'){
+      sh "npm install"
+    //   sh "npm test"
+  }
+  stage('Docker Build, Push'){
+    withDockerRegistry([credentialsId: "${dockerhubCred}", url: 'https://index.docker.io/v1/']) {
+      sh "docker build -t ${ImageName} ."
+      sh "docker push ${ImageName}"
+        }
+
+  }
+
+   
+  } catch (err) {
+      currentBuild.result = 'FAILURE'
+  }
+}
