@@ -26,10 +26,7 @@ node{
   }
 
   stage('Deploy back'){
-    sh "aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' --filters 'Name=Name,Values=lemon_back' --output text && grep stopped && awk '{print \$2}' && 
-    while read line; 
-    do echo \$line 
-    done"
+    sh "aws ec2 describe-instances --query 'Reservations[*].Instances[*].[InstanceId]' --filters 'Name=Name,Values=lemon_back' --output text && grep stopped && awk '{print \$2}' && while read line; do echo \$line done"
 
   }
 
